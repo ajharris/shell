@@ -10,8 +10,8 @@ set -x
 # Then it unzips the raw data provided by the client.
 
 if [ -d newproject ]; then
-  echo "Directory 'newproject' already exists. Please remove it before running this script."
-  exit 1
+  echo "Directory 'newproject' already exists. Removing it now."
+  rm -r newproject
 fi
 mkdir newproject
 cd newproject
@@ -28,21 +28,33 @@ unzip -q rawdata.zip
 # Complete assignment here
 
 # 1. Create a directory named data
+mkdir data
 
 # 2. Move the ./rawdata directory to ./data/raw
+mv rawdata data/raw
 
 # 3. List the contents of the ./data/raw directory
+ls data/raw
 
 # 4. In ./data/processed, create the following directories: server_logs, user_logs, and event_logs
+mkdir data/processed && cd data/processed
+mkdir server_logs user_logs event_logs
+cd /workspaces/shell/02_activities/assignments/newproject
 
 # 5. Copy all server log files (files with "server" in the name AND a .log extension) from ./data/raw to ./data/processed/server_logs
+cp ./data/raw/*server*.log ./data/processed/server_logs/ 2>/dev/null || echo "No server log files found to copy."
 
 # 6. Repeat the above step for user logs and event logs
+cp ./data/raw/*user*.log ./data/processed/user_logs/ 2>/dev/null || echo "No user log files found to copy."
+cp ./data/raw/*event*.log ./data/processed/event_logs/ 2>/dev/null || echo "No event log files found to copy."
 
 # 7. For user privacy, remove all files containing IP addresses (files with "ipaddr" in the filename) from ./data/raw and ./data/processed/user_logs
+rm ./data/raw/*ipaddr* 2>/dev/null || echo "No IP address files found to remove."
+rm ./data/processed/user_logs/*ipaddr* 2>/dev/null || echo "No IP address files found to remove."
 
 # 8. Create a file named ./data/inventory.txt that lists all the files in the subfolders of ./data/processed
-
+touch data/inventory.txt
+find data/processed -type f > data/inventory.txt
 
 ###########################################
 
