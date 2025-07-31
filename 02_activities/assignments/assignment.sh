@@ -20,8 +20,13 @@ mkdir analysis output
 touch README.md
 touch analysis/main.py
 
+
 # download client data
-curl -Lo rawdata.zip https://github.com/UofT-DSI/shell/raw/refs/heads/main/02_activities/assignments/rawdata.zip
+if [ ! -f rawdata.zip ]; then
+  curl -Lo rawdata.zip https://github.com/UofT-DSI/shell/raw/refs/heads/main/02_activities/assignments/rawdata.zip
+fi
+rm -rf rawdata
+rm -rf data
 unzip -q rawdata.zip
 
 ###########################################
@@ -30,8 +35,11 @@ unzip -q rawdata.zip
 # 1. Create a directory named data
 mkdir data
 
-# 2. Move the ./rawdata directory to ./data/raw
-mv rawdata data/raw
+
+# 2. Move the contents of ./rawdata into ./data/raw
+mkdir -p data/raw
+mv rawdata/* data/raw/
+rmdir rawdata
 
 # 3. List the contents of the ./data/raw directory
 ls data/raw
@@ -39,7 +47,7 @@ ls data/raw
 # 4. In ./data/processed, create the following directories: server_logs, user_logs, and event_logs
 mkdir data/processed && cd data/processed
 mkdir server_logs user_logs event_logs
-cd /workspaces/shell/02_activities/assignments/newproject
+cd ../..
 
 # 5. Copy all server log files (files with "server" in the name AND a .log extension) from ./data/raw to ./data/processed/server_logs
 cp ./data/raw/*server*.log ./data/processed/server_logs/ 2>/dev/null || echo "No server log files found to copy."
